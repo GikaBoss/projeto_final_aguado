@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Página Pessoal</title>
+    <link rel="stylesheet" href="style.css">
+</head>  
+
+<body>
+    <div class="container">
+        <h1>Olá, mundo!</h1>
+        <p>Meu nome é Pedro Henrique Godoi Bernardino e sou desenvolvedor web.</p>
+        
+        <!-- Formulário para inserção -->
+        <h2>Adicionar Informação</h2>
+        <form method="POST" action="insert.php">
+            <input type="text" name="info" placeholder="Digite uma nova informação" required>
+            <button type="submit">Adicionar</button>
+        </form>
+
+        <!-- Exibir informações do banco de dados -->
+        <h2>Informações Salvas</h2>
+        <div id="info">
+            <?php
+            // Conexão com o banco de dados
+            $conn = new mysqli("localhost", "usuario", "senha", "banco_de_dados");
+
+            // Verifica a conexão
+            if ($conn->connect_error) {
+                die("Conexão falhou: " . $conn->connect_error);
+            }
+
+            // Seleciona as informações
+            $sql = "SELECT * FROM informacoes";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                echo "<ul>";
+                while($row = $result->fetch_assoc()) {
+                    echo "<li>" . $row["info"] . " 
+                          <a href='delete.php?id=" . $row["id"] . "'>Deletar</a> 
+                          <a href='update.php?id=" . $row["id"] . "'>Atualizar</a></li>";
+                }
+                echo "</ul>";
+            } else {
+                echo "Nenhuma informação encontrada.";
+            }
+
+            $conn->close();
+            ?>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
